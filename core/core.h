@@ -15,7 +15,7 @@ public:
 	*/
 	const char* GetRawImageData(int frame = 0)const;
 
-	char* GetImage8Bits(int frame = 0)const;
+	char* Get8BitsImage(int frame = 0)const;
 	int GetImageWidth() const;
 	int GetImageHeight()const;
 	int GetNumberOfFrames()const;

@@ -14,8 +14,9 @@
 int main()
 {
 	Dicom dicom;
-	//if (dicom.LoadFile("‪C:/Users/ReFantasy/Desktop/CT数据/平海涛/a/ser007img00001.dcm"))
-	if (dicom.LoadFile("C:/Users/ReFantasy/Desktop/test.DCM"))
+	//auto cond = dicom.LoadFile("C:/Users/ReFantasy/Desktop/ser007img00001.DCM");
+	auto cond = dicom.LoadFile("\\\\WIN-5307K1TI0MH\\Storage\\1316253\\1.3.12.2.1107.5.4.5.35175.30000020072604323270300000963.512XA_5f1f75665aef9954.dcm");
+	if (cond)
 	{
 		std::cout << "Load success" << std::endl;
 	}
@@ -36,9 +37,9 @@ int main()
 
 	char* data;
 	//dicom.SetWindow(300, 1500);
-	data = dicom.GetImage8Bits();
+	data = dicom.Get8BitsImage(25);
 	std::cout << "WriteToPPM" << std::endl;
-	WriteToPPM("test.ppm", 512, 512, (const unsigned char*)(data));
+	WriteToPPM("test.ppm", dicom.GetImageHeight(), dicom.GetImageWidth(), (const unsigned char*)(data));
 
 	free(data);
 

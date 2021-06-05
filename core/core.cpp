@@ -12,8 +12,7 @@
 #include <thread>
 #include <vector>
 
-#include <chrono>
-using namespace std::chrono;
+
 
 bool Dicom::LoadFile(std::string filename)
 {
@@ -21,6 +20,7 @@ bool Dicom::LoadFile(std::string filename)
 	OFCondition cond = dff->loadFile(filename.c_str());
 	if (!cond.good())
 	{
+		std::cout << cond.text() << std::endl;
 		return false;
 	}
 
@@ -157,7 +157,7 @@ const char* Dicom::GetRawImageData(int frame) const
 	return nullptr;
 }
 
-char* Dicom::GetImage8Bits(int frame) const
+char* Dicom::Get8BitsImage(int frame) const
 {
 	if (frame >= GetNumberOfFrames())
 		return nullptr;
@@ -176,35 +176,7 @@ char* Dicom::GetImage8Bits(int frame) const
 	}
 	else if (bytes_per_pixel == 2)
 	{
-		
-		// short to char
-		//short left_value = _window_center - _window_width / 2;
-		//short right_value = _window_center + _window_width / 2;
-		//short* srowdata = (short*)rowdata;
 
-
-		//auto t1 = std::chrono::steady_clock::now();
-		//
-		//for (int row = 0; row < GetImageHeight(); row++)
-		//{
-		//	for (int col = 0; col < GetImageWidth(); col++)
-		//	{
-		//		short pix_value = srowdata[row * GetImageWidth() + col]* GetRescaleSlope() + GetRescaleIntercept(); // CT Value
-		//		
-		//		// 根据窗位窗宽 归一化到 0-255
-		//		if (pix_value < left_value)
-		//			pix_value = left_value;
-		//		if (pix_value > right_value)
-		//			pix_value = right_value;
-		//		data[row * GetImageWidth() + col] = (pix_value - left_value) / _window_width * 255;
-		//	}
-
-		//}
-		//auto t2 = std::chrono::steady_clock::now();
-		//std::cout << "time: " << std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count() << std::endl;
-
-
-		/////////////////////////////////
 		short left_value = _window_center - _window_width / 2;
 		short right_value = _window_center + _window_width / 2;
 		short* srowdata = (short*)rowdata;
@@ -219,7 +191,7 @@ char* Dicom::GetImage8Bits(int frame) const
 		std::vector<std::thread> threads;
 		for (int row = 0; row < h; row++)
 		{
-			auto f = [&](int row)
+			auto process_one_row = [&](int row)
 			{
 				for (int col = 0; col < w; col++)
 				{
@@ -235,18 +207,12 @@ char* Dicom::GetImage8Bits(int frame) const
 
 			};
 
-			threads.push_back(std::thread(f, row));
+			threads.push_back(std::thread(process_one_row, row));
 
 		}
 		for (int i = 0; i < threads.size(); i++)
 			threads[i].join();
 
-
-
-		auto t2 = std::chrono::steady_clock::now();
-		std::cout << "time: " << std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count() << std::endl;
-		
-		
 	}
 	else
 	{
