@@ -230,9 +230,31 @@ void Dicom::GetWindow(double& win_center, double& win_width) const
 	win_width = _window_width;
 }
 
+void Dicom::GetDefaultWindow(double& win_center, double& win_width) const
+{
+	std::string win;
+	FindAndGetOFString(DCM_WindowCenter, win);
+	win_center = StringToDouble(win);
+	FindAndGetOFString(DCM_WindowWidth, win);
+	win_width = StringToDouble(win);
+}
+
 void Dicom::SetWindow(double win_center, double win_width)
 {
 	_window_center = win_center;
 	_window_width = win_width;
+}
+
+bool Dicom::GetPixelSpacing(double& sx, double& sy) const
+{
+	if (!dff)return false;
+
+	OFString sp;
+	FindAndGetOFString(DCM_PixelSpacing, sp, 0);
+	sx = StringToDouble(sp.c_str());
+	FindAndGetOFString(DCM_PixelSpacing, sp, 1);
+	sy = StringToDouble(sp.c_str());
+
+	return true;
 }
 

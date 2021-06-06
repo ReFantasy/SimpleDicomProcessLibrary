@@ -14,8 +14,8 @@
 int main()
 {
 	Dicom dicom;
-	//auto cond = dicom.LoadFile("C:/Users/ReFantasy/Desktop/ser007img00001.DCM");
-	auto cond = dicom.LoadFile("\\\\WIN-5307K1TI0MH\\Storage\\1316253\\1.3.12.2.1107.5.4.5.35175.30000020072604323270300000963.512XA_5f1f75665aef9954.dcm");
+	auto cond = dicom.LoadFile("C:/Users/ReFantasy/Desktop/ser007img00001.DCM");
+	//auto cond = dicom.LoadFile("\\\\WIN-5307K1TI0MH\\Storage\\1316253\\1.3.12.2.1107.5.4.5.35175.30000020072604323270300000963.512XA_5f1f75665aef9954.dcm");
 	if (cond)
 	{
 		std::cout << "Load success" << std::endl;
@@ -35,13 +35,15 @@ int main()
 	dicom.FindAndGetOFString(DCM_PixelSpacing, sp);
 	std::cout << "Pixel Spacing: " << sp << std::endl;
 
-	unsigned char* data;
-	//dicom.SetWindow(300, 1500);
+	
+	//std::cout << "PixelSpacing: " << dicom.GetPixelSpacing() << std::endl;
+
+	/*unsigned char* data;
 	data = dicom.Create8BitsImage(25);
 	std::cout << "WriteToPPM" << std::endl;
 	WriteToPPM("test.ppm", dicom.GetImageHeight(), dicom.GetImageWidth(), (const unsigned char*)(data));
 
-	free(data);
+	free(data);*/
 
 	//WriteToPPM("test.ppm", 768, 768, (const unsigned char*)dicom.GetRawImageData());
 

@@ -22,7 +22,10 @@ public:
 	int GetNumberOfFrames()const;
 
 	void GetWindow(double& win_center, double& win_width)const;
+	void GetDefaultWindow(double& win_center, double& win_width)const;
 	void SetWindow(double win_center, double win_width);
+
+	bool GetPixelSpacing(double &sx, double &sy)const;
 	
 	
 	bool FindAndGetOFString(const DcmTagKey& tagKey, std::string& value) const;
