@@ -130,8 +130,7 @@ const char* Dicom::GetRawImageData(int frame) const
 		return nullptr;
 
 	unsigned int bytes_per_pixel = (BitsAllocatedOfPerPixel() <= 8 ? 1 : 2);
-	// image data length
-	unsigned long data_length = GetImageWidth() * GetImageHeight() * bytes_per_pixel * SamplesOfPerPixel();
+	unsigned long raw_data_length = GetImageWidth() * GetImageHeight() * bytes_per_pixel;// *SamplesOfPerPixel();
 
 	DcmElement* element = NULL;
 	OFCondition cond = dff->getDataset()->findAndGetElement(DCM_PixelData, element);
@@ -150,28 +149,34 @@ const char* Dicom::GetRawImageData(int frame) const
 		}
 		else
 		{
-			return (const char*)pData + frame * (unsigned long long)data_length;
+			return (const char*)pData + frame * (unsigned long long)raw_data_length;
 		}
 	}
 
 	return nullptr;
 }
 
-char* Dicom::Get8BitsImage(int frame) const
+unsigned char* Dicom::Create8BitsImage(int frame) const
 {
+	
+	unsigned int w = GetImageWidth();
+	unsigned int h = GetImageHeight();
+	unsigned int bytes_per_pixel = (BitsAllocatedOfPerPixel() <= 8 ? 1 : 2);
+
+
 	if (frame >= GetNumberOfFrames())
 		return nullptr;
 
-	unsigned int w = GetImageWidth();
-	unsigned int h = GetImageHeight();
+	auto rowdata = GetRawImageData(frame);
+	if (rowdata == nullptr)return nullptr;
 
-	unsigned int bytes_per_pixel = (BitsAllocatedOfPerPixel() <= 8 ? 1 : 2);
-	unsigned long data_length = w * h * bytes_per_pixel * SamplesOfPerPixel();
-
-	char* data = (char*)malloc(w * h);
+    // allocate memeory
+	unsigned char* data = (unsigned char*)malloc(w * h);
 	memset(data, 0, w * h);
 
-	auto rowdata = GetRawImageData(frame);
+	
+	
+	// copy image data
 	if (bytes_per_pixel == 1)
 	{
 		memcpy(data, rowdata, w * h);
@@ -179,42 +184,36 @@ char* Dicom::Get8BitsImage(int frame) const
 	}
 	else if (bytes_per_pixel == 2)
 	{
-
-		short left_value = _window_center - _window_width / 2;
-		short right_value = _window_center + _window_width / 2;
-		short* srowdata = (short*)rowdata;
-
-
-		int w = GetImageWidth();
-		int h = GetImageHeight();
 		double slpoe = GetRescaleSlope();
 		int intercept = GetRescaleIntercept();
 
+		short win_left = _window_center - _window_width / 2;
+		short win_right = _window_center + _window_width / 2;
+		short* rowdata_short = (short*)rowdata;
+
 		std::vector<std::thread> threads;
+
 		for (int row = 0; row < h; row++)
 		{
 			auto process_one_row = [&](int row)
 			{
 				for (int col = 0; col < w; col++)
 				{
-					short pix_value = srowdata[row * w + col] * slpoe + intercept; // CT Value
+					short ct_value = rowdata_short[row * w + col] * slpoe + intercept; // CT Value
 
-					// 根据窗位窗宽 归一化到 0-255
-					if (pix_value < left_value)
-						pix_value = left_value;
-					if (pix_value > right_value)
-						pix_value = right_value;
-					data[row * w + col] = (pix_value - left_value) / _window_width * 255;
+					ct_value = ct_value < win_left ? win_left : (ct_value > win_right ? win_right : ct_value);
+					data[row * w + col] = (ct_value - win_left) / _window_width * 255;
 				}
 
 			};
 
+			// multithread accerlerate
 			threads.push_back(std::thread(process_one_row, row));
 
 		}
+
 		for (int i = 0; i < threads.size(); i++)
 			threads[i].join();
-
 	}
 	else
 	{

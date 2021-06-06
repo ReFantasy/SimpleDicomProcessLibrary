@@ -28,16 +28,16 @@ int main()
 
 	std::cout << "rows: " << dicom.GetImageHeight() << std::endl;
 	std::cout << "frames: " << dicom.GetNumberOfFrames() << std::endl;
-	std::cout << "DCM_BitsAllocated: " << dicom.BitsAllocatedOfPerPixel() << std::endl;
-	std::cout << "DCM_BitsStored: " << dicom.BitsAllocatedOfPerPixel() << std::endl;
+	//std::cout << "DCM_BitsAllocated: " << dicom.BitsAllocatedOfPerPixel() << std::endl;
+	//std::cout << "DCM_BitsStored: " << dicom.BitsAllocatedOfPerPixel() << std::endl;
 
 	std::string sp;
 	dicom.FindAndGetOFString(DCM_PixelSpacing, sp);
 	std::cout << "Pixel Spacing: " << sp << std::endl;
 
-	char* data;
+	unsigned char* data;
 	//dicom.SetWindow(300, 1500);
-	data = dicom.Get8BitsImage(25);
+	data = dicom.Create8BitsImage(25);
 	std::cout << "WriteToPPM" << std::endl;
 	WriteToPPM("test.ppm", dicom.GetImageHeight(), dicom.GetImageWidth(), (const unsigned char*)(data));
 
