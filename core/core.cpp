@@ -162,16 +162,19 @@ char* Dicom::Get8BitsImage(int frame) const
 	if (frame >= GetNumberOfFrames())
 		return nullptr;
 
-	unsigned int bytes_per_pixel = (BitsAllocatedOfPerPixel() <= 8 ? 1 : 2);
-	unsigned long data_length = GetImageWidth() * GetImageHeight() * bytes_per_pixel * SamplesOfPerPixel();
+	unsigned int w = GetImageWidth();
+	unsigned int h = GetImageHeight();
 
-	char* data = (char*)malloc(data_length);
-	memset(data, 0, data_length);
+	unsigned int bytes_per_pixel = (BitsAllocatedOfPerPixel() <= 8 ? 1 : 2);
+	unsigned long data_length = w * h * bytes_per_pixel * SamplesOfPerPixel();
+
+	char* data = (char*)malloc(w * h);
+	memset(data, 0, w * h);
 
 	auto rowdata = GetRawImageData(frame);
 	if (bytes_per_pixel == 1)
 	{
-		memcpy(data, rowdata, data_length);
+		memcpy(data, rowdata, w * h);
 
 	}
 	else if (bytes_per_pixel == 2)
@@ -182,7 +185,6 @@ char* Dicom::Get8BitsImage(int frame) const
 		short* srowdata = (short*)rowdata;
 
 
-		auto t1 = std::chrono::steady_clock::now();
 		int w = GetImageWidth();
 		int h = GetImageHeight();
 		double slpoe = GetRescaleSlope();
