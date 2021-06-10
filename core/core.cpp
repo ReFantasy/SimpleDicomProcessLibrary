@@ -11,7 +11,7 @@
 #include "dcmtk/ofstd/ofstd.h"
 
 
-Dicom::Dicom(std::string filename)
+DicomFile::DicomFile(std::string filename)
 {
 	OFCondition status =  df->loadFile(filename.c_str());
 	if (!status.good())
@@ -24,7 +24,7 @@ Dicom::Dicom(std::string filename)
 	}
 }
 
-bool Dicom::LoadFile(std::string filename)
+bool DicomFile::LoadFile(std::string filename)
 {
 	auto tmp_df = std::make_shared<DcmFileFormat>();
 
@@ -38,32 +38,32 @@ bool Dicom::LoadFile(std::string filename)
 	return false;
 }
 
-int Dicom::GetWidth() const
+int DicomFile::GetWidth() const
 {
 	return di->getWidth();
 }
 
-int Dicom::GetHeight() const
+int DicomFile::GetHeight() const
 {
 	return di->getHeight();
 }
 
-bool Dicom::GetWindow(double& win_center, double& win_width) const
+bool DicomFile::GetWindow(double& win_center, double& win_width) const
 {
 	return di->getWindow(win_center, win_width);
 }
 
-bool Dicom::SetWindow(double win_center, double win_width)
+bool DicomFile::SetWindow(double win_center, double win_width)
 {
 	return di->setWindow(win_center, win_width);
 }
 
-int Dicom::GetNumberOfFrames() const
+int DicomFile::GetNumberOfFrames() const
 {
 	return di->getNumberOfFrames();
 }
 
-const unsigned char* Dicom::GetOutputData(int frame)const
+const unsigned char* DicomFile::GetOutputData(int frame)const
 {
 	int frames = GetNumberOfFrames();
 	if (frame >= frames)
@@ -72,7 +72,7 @@ const unsigned char* Dicom::GetOutputData(int frame)const
 	return (const unsigned char*)di->getOutputData(8, frame);
 }
 
-int Dicom::GetNumberOfImage() const
+int DicomFile::GetNumberOfImage() const
 {
 	//OFString number;
 	//df->getDataset()->findAndGetOFString(DCM_InstanceNumber, number);
@@ -82,7 +82,7 @@ int Dicom::GetNumberOfImage() const
 
 }
 
-std::string Dicom::GetSeriesInstanceUID()const
+std::string DicomFile::GetSeriesInstanceUID()const
 {
 	OFString id;
 	df->getDataset()->findAndGetOFString(DCM_SeriesInstanceUID, id);

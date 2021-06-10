@@ -3,14 +3,13 @@
 
 #include "dcmtk/dcmdata/dcfilefo.h"
 #include "dcmtk/dcmimgle/dcmimage.h"
-//#include <iostream>
 #include <string>
 
-class Dicom
+class DicomFile
 {
 public:
-	Dicom() = default;
-	Dicom(std::string filename);
+	DicomFile() = default;
+	DicomFile(std::string filename);
 	virtual bool LoadFile(std::string filename);
 
 	virtual int GetWidth()const;

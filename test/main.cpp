@@ -14,7 +14,7 @@
 using namespace std;
 int main()
 {
-	Dicom dicom;
+	DicomFile dicom;
 	auto cond = dicom.LoadFile("C:/Users/ReFantasy/Desktop/ser007img00001.DCM");
 	if (!cond)
 		return 0;
