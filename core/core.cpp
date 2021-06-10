@@ -13,7 +13,7 @@
 
 DicomFile::DicomFile(std::string filename)
 {
-	OFCondition status =  df->loadFile(filename.c_str());
+	OFCondition status = df->loadFile(filename.c_str());
 	if (!status.good())
 	{
 		df = std::make_shared<DcmFileFormat>();
@@ -51,6 +51,19 @@ int DicomFile::GetHeight() const
 bool DicomFile::GetWindow(double& win_center, double& win_width) const
 {
 	return di->getWindow(win_center, win_width);
+}
+
+bool DicomFile::GetDefaultWindow(double& win_center, double& win_width) const
+{
+	OFString c, w;
+	auto res1 = df->getDataset()->findAndGetOFString(DCM_WindowCenter, c);
+	auto res2 = df->getDataset()->findAndGetOFString(DCM_WindowWidth, w);
+	if ((!res1.good()) || (!res2.good()))
+		return false;
+	win_center = std::atof(c.c_str());
+	win_width = std::atof(w.c_str());
+
+	return true;
 }
 
 bool DicomFile::SetWindow(double win_center, double win_width)
@@ -118,7 +131,7 @@ bool DicomSeries::Pop(int num)
 	return  true;
 }
 
-void DicomSeries::Clear() 
+void DicomSeries::Clear()
 {
 	_SeriesInstanceUID = std::string{};
 	_series_map.clear();
@@ -143,4 +156,27 @@ std::shared_ptr<DicomFile> DicomSeries::GetDicom(int n_th)
 	}
 
 	return iter->second;
+}
+
+void DicomSeries::GetSeriesDcmMinMaxValue(double& min, double& max) const
+{
+	double min_value = DBL_MAX;
+	double max_value = DBL_MIN;
+	for (auto it = _series_map.begin(); it != _series_map.end(); it++)
+	{
+		it->second->GetMinMaxValues(min, max);
+		if (min_value > min)
+			min_value = min;
+		if (max_value < max)
+			max_value = max;
+	}
+	min = min_value;
+	max = max_value;
+}
+
+bool DicomFile::GetMinMaxValues(double& min, double& max) const
+{
+	if (df == nullptr)
+		return false;
+	return di->getMinMaxValues(min, max);
 }

@@ -17,6 +17,7 @@ public:
 	virtual int GetHeight()const;
 
 	virtual bool GetWindow(double& win_center, double& win_width)const;
+	virtual bool GetDefaultWindow(double& win_center, double& win_width)const;
 	virtual bool SetWindow(double  win_center, double  win_width);
 
 	virtual int GetNumberOfFrames()const;
@@ -24,6 +25,8 @@ public:
 
 	virtual int GetNumberOfImage()const;
 	virtual std::string GetSeriesInstanceUID()const;
+	virtual bool GetMinMaxValues(double &min, double &max)const;
+
 
 private:
 	std::shared_ptr<DcmFileFormat> df;
@@ -38,6 +41,8 @@ public:
 	void Clear();
 	int GetNumberOfDicoms()const;
 	std::shared_ptr<DicomFile> GetDicom(int n_th);
+
+	void GetSeriesDcmMinMaxValue(double& min, double& max) const;
 
 private:
 	std::string _SeriesInstanceUID;
