@@ -4,6 +4,7 @@
 #include "dcmtk/dcmdata/dcfilefo.h"
 #include "dcmtk/dcmimgle/dcmimage.h"
 #include <string>
+#include <map>
 
 class DicomFile
 {
@@ -29,4 +30,13 @@ private:
 	std::shared_ptr<DicomImage> di;
 };
 
+class DicomSeries
+{
+public:
+
+
+private:
+	std::string _SeriesInstanceUID;
+	std::map<int, std::shared_ptr<DicomFile>> _series_map;
+};
 #endif//__CORE_H__
