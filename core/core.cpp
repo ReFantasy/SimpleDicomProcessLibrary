@@ -1,17 +1,16 @@
 #include "core.h"
 #include "global.h"
+#include <vector>
+#include <thread>
 
-#include "dcmtk/config/osconfig.h"
 #include "dcmtk/dcmimgle/dcmimage.h"
 #include "dcmtk/dcmdata/dcfilefo.h"
 #include "dcmtk/dcmdata/dcdeftag.h"
 #include "dcmtk/dcmdata/dcuid.h"
-#include "dcmtk/dcmjpeg/djdecode.h"
 #include "dcmtk/dcmdata/dcmetinf.h"
 #include "dcmtk/ofstd/ofstd.h"
 
-
-DicomFile::DicomFile(std::string filename)
+DicomFile::DicomFile(const std::string& filename)
 {
 	OFCondition status = df->loadFile(filename.c_str());
 	if (!status.good())
@@ -24,7 +23,7 @@ DicomFile::DicomFile(std::string filename)
 	}
 }
 
-bool DicomFile::LoadFile(std::string filename)
+bool DicomFile::LoadFile(const std::string &filename)
 {
 	auto tmp_df = std::make_shared<DcmFileFormat>();
 
@@ -76,7 +75,7 @@ int DicomFile::GetNumberOfFrames() const
 	return di->getNumberOfFrames();
 }
 
-const unsigned char* DicomFile::GetOutputData(int frame)const
+const unsigned char* DicomFile::GetOutputData(int frame) const
 {
 	int frames = GetNumberOfFrames();
 	if (frame >= frames)
@@ -93,20 +92,20 @@ int DicomFile::GetNumberOfImage() const
 
 }
 
-std::string DicomFile::GetSeriesInstanceUID()const
+std::string DicomFile::GetSeriesInstanceUID() const
 {
 	OFString id;
 	df->getDataset()->findAndGetOFString(DCM_SeriesInstanceUID, id);
 	return std::string(id.c_str());
 }
 
-bool DicomSeries::Push(std::shared_ptr<DicomFile> df)
+bool DicomSeries::Add(std::shared_ptr<DicomFile> df)
 {
 	if (_series_map.empty())
 	{
 		_SeriesInstanceUID = df->GetSeriesInstanceUID();
 		int num = df->GetNumberOfImage();
-		_series_map.insert({ num,df });
+		_series_map.insert({ num, df });
 	}
 	else
 	{
@@ -116,19 +115,19 @@ bool DicomSeries::Push(std::shared_ptr<DicomFile> df)
 		if (_series_map.find(num) != _series_map.end())
 			return false;
 
-		_series_map.insert({ num,df });
+		_series_map.insert({ num, df });
 	}
 
 	return true;
 }
 
-bool DicomSeries::Pop(int num)
+bool DicomSeries::Delete(int key)
 {
-	if (_series_map.find(num) == _series_map.end())
+	if (_series_map.find(key) == _series_map.end())
 		return false;
 
-	_series_map.erase(num);
-	return  true;
+	_series_map.erase(key);
+	return true;
 }
 
 void DicomSeries::Clear()
@@ -137,7 +136,7 @@ void DicomSeries::Clear()
 	_series_map.clear();
 }
 
-int DicomSeries::GetNumberOfDicoms() const
+int DicomSeries::GetTotalFrames() const
 {
 	return _series_map.size();
 }
@@ -172,6 +171,58 @@ void DicomSeries::GetSeriesDcmMinMaxValue(double& min, double& max) const
 	}
 	min = min_value;
 	max = max_value;
+}
+
+bool DicomSeries::ReadDir(std::string dir)
+{
+	std::filesystem::path path(dir);
+	if (!std::filesystem::exists(path))
+		return false;
+
+	std::filesystem::directory_entry entry(dir);
+	if (!entry.is_directory())
+		return false;
+
+	std::filesystem::directory_iterator iters(dir);
+	std::vector<std::thread> threads;
+	std::vector<std::shared_ptr<DicomFile>> dfs;
+
+	for (const auto& iter:iters)
+	{
+		auto load_file = [](const std::shared_ptr<DicomFile>& df, const std::string& filename)
+		{
+			df->LoadFile(filename);
+		};
+
+		auto df = std::make_shared<DicomFile>();
+		dfs.push_back(df);
+		threads.emplace_back(load_file, df, iter.path());
+	}
+
+	for (auto& thread : threads)thread.join();
+	for (const auto& df:dfs)Add(df);
+
+	return true;
+}
+
+bool DicomSeries::GetWindow(double& win_center, double& win_width) const
+{
+	if(GetTotalFrames()<1)
+		return false;
+	_series_map.begin()->second->GetWindow(win_center, win_width);
+	return true;
+}
+
+bool DicomSeries::SetWindow(double win_center, double win_width)
+{
+	bool res = true;
+	for(auto it :_series_map)
+	{
+		res = it.second->SetWindow(win_center,win_width);
+		if(res == false)
+			break;;
+	}
+	return res;
 }
 
 bool DicomFile::GetMinMaxValues(double& min, double& max) const

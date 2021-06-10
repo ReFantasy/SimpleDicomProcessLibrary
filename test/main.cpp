@@ -14,31 +14,19 @@
 using namespace std;
 int main()
 {
-	DicomFile dicom;
-	auto cond = dicom.LoadFile("C:/Users/ReFantasy/Desktop/ser007img00001.DCM");
-	if (!cond)
+	DicomSeries series;
+	auto b = series.ReadDir("/Users/refantasy/Desktop/CT1001051/401_351");
+	if(!b)
+	{
+		cout<<"read fail"<<endl;
 		return 0;
+	}
+	cout<<"read files success: file count  "<<series.GetTotalFrames()<<endl;
 
-	std::cout << "rows: " << dicom.GetHeight()<< std::endl;
-	std::cout << "frames: " << dicom.GetNumberOfFrames() << std::endl;
-	////std::cout << "DCM_BitsAllocated: " << dicom.BitsAllocatedOfPerPixel() << std::endl;
-	////std::cout << "DCM_BitsStored: " << dicom.BitsAllocatedOfPerPixel() << std::endl;
+	series.SetWindow(-500,10);
 
-	//std::string sp;
-	//dicom.FindAndGetOFString(DCM_PixelSpacing, sp);
-	//std::cout << "Pixel Spacing: " << sp << std::endl;
+	auto df = series.GetDicom(100);
+	auto data = df->GetOutputData(0);
+	WriteToPPM("test.ppm", df->GetWidth(), df->GetHeight(), data);
 
-	
-	//std::cout << "PixelSpacing: " << dicom.GetPixelSpacing() << std::endl;
-
-	/*dicom.SetWindow(-500, 10);
-
-	const unsigned char* data = nullptr;
-	data = dicom.GetOutputData(0);
-	printf("addr:%x\n", data);
-	std::cout << "WriteToPPM" << std::endl;
-	WriteToPPM("a.ppm",  dicom.GetWidth(),dicom.GetHeight(), data);*/
-
-	std::cout << "ImageNumber: " << dicom.GetNumberOfImage() << std::endl;
-	std::cout << "GetSeriesInstanceUID: " << dicom.GetSeriesInstanceUID() << std::endl;
 }

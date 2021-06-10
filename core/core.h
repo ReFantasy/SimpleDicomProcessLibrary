@@ -1,17 +1,18 @@
 #ifndef __CORE_H__
 #define __CORE_H__
 
-#include "dcmtk/dcmdata/dcfilefo.h"
-#include "dcmtk/dcmimgle/dcmimage.h"
 #include <string>
 #include <map>
+
+class DcmFileFormat;
+class DicomImage;
 
 class DicomFile
 {
 public:
 	DicomFile() = default;
-	DicomFile(std::string filename);
-	virtual bool LoadFile(std::string filename);
+	explicit DicomFile(const std::string& filename);
+	virtual bool LoadFile(const std::string &filename);
 
 	virtual int GetWidth()const;
 	virtual int GetHeight()const;
@@ -36,42 +37,20 @@ private:
 class DicomSeries
 {
 public:
-	bool Push(std::shared_ptr<DicomFile> df);
-	bool Pop(int key);
-	void Clear();
-	int GetNumberOfDicoms()const;
+	bool ReadDir(std::string dir);
+	bool Add(std::shared_ptr<DicomFile> df);
+	bool Delete(int key);
 	std::shared_ptr<DicomFile> GetDicom(int n_th);
 
+	int GetTotalFrames()const;
 	void GetSeriesDcmMinMaxValue(double& min, double& max) const;
 
+	bool GetWindow(double& win_center, double& win_width)const;
+	bool SetWindow(double  win_center, double  win_width);
+
+	void Clear();
 private:
 	std::string _SeriesInstanceUID;
 	std::map<int, std::shared_ptr<DicomFile>> _series_map;
 };
 #endif//__CORE_H__
-
-
-
-//std::vector<std::thread> threads;
-//std::vector<std::shared_ptr<DicomFile>> dfs;
-//dfs.resize(fileCount);
-//for (int i = 0; i < fileCount; i++)
-//{
-//	auto f = [&](QString fileName, int i) {
-//		std::shared_ptr<DicomFile> df = std::make_shared<DicomFile>();
-//		df->LoadFile(fileName.toStdString());
-//		dfs[i] = df;
-//	};
-//
-//	QString fileName = dir.absoluteFilePath(dir[i]);
-//	threads.push_back(std::thread(f, fileName, i));
-//}
-//for (int i = 0; i < fileCount; i++)
-//{
-//	threads[i].join();
-//}
-//for (int i = 0; i < fileCount; i++)
-//{
-//	series.Push(dfs[i]);
-//}
-//return true;
