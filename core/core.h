@@ -49,3 +49,29 @@ private:
 	std::map<int, std::shared_ptr<DicomFile>> _series_map;
 };
 #endif//__CORE_H__
+
+
+
+//std::vector<std::thread> threads;
+//std::vector<std::shared_ptr<DicomFile>> dfs;
+//dfs.resize(fileCount);
+//for (int i = 0; i < fileCount; i++)
+//{
+//	auto f = [&](QString fileName, int i) {
+//		std::shared_ptr<DicomFile> df = std::make_shared<DicomFile>();
+//		df->LoadFile(fileName.toStdString());
+//		dfs[i] = df;
+//	};
+//
+//	QString fileName = dir.absoluteFilePath(dir[i]);
+//	threads.push_back(std::thread(f, fileName, i));
+//}
+//for (int i = 0; i < fileCount; i++)
+//{
+//	threads[i].join();
+//}
+//for (int i = 0; i < fileCount; i++)
+//{
+//	series.Push(dfs[i]);
+//}
+//return true;
