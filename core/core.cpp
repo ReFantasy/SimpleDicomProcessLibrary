@@ -74,8 +74,6 @@ const unsigned char* DicomFile::GetOutputData(int frame)const
 
 int DicomFile::GetNumberOfImage() const
 {
-	//OFString number;
-	//df->getDataset()->findAndGetOFString(DCM_InstanceNumber, number);
 	Sint32 number = -1;
 	df->getDataset()->findAndGetSint32(DCM_InstanceNumber, number);
 	return number;
@@ -87,4 +85,62 @@ std::string DicomFile::GetSeriesInstanceUID()const
 	OFString id;
 	df->getDataset()->findAndGetOFString(DCM_SeriesInstanceUID, id);
 	return std::string(id.c_str());
+}
+
+bool DicomSeries::Push(std::shared_ptr<DicomFile> df)
+{
+	if (_series_map.empty())
+	{
+		_SeriesInstanceUID = df->GetSeriesInstanceUID();
+		int num = df->GetNumberOfImage();
+		_series_map.insert({ num,df });
+	}
+	else
+	{
+		if (_SeriesInstanceUID != df->GetSeriesInstanceUID())
+			return false;
+		int num = df->GetNumberOfImage();
+		if (_series_map.find(num) != _series_map.end())
+			return false;
+
+		_series_map.insert({ num,df });
+	}
+
+	return true;
+}
+
+bool DicomSeries::Pop(int num)
+{
+	if (_series_map.find(num) == _series_map.end())
+		return false;
+
+	_series_map.erase(num);
+	return  true;
+}
+
+void DicomSeries::Clear() 
+{
+	_SeriesInstanceUID = std::string{};
+	_series_map.clear();
+}
+
+int DicomSeries::GetNumberOfDicoms() const
+{
+	return _series_map.size();
+}
+
+std::shared_ptr<DicomFile> DicomSeries::GetDicom(int n_th)
+{
+	if (n_th >= _series_map.size())
+		return nullptr;
+
+	int n = 0;
+	auto iter = _series_map.begin();
+	while (n != n_th)
+	{
+		n++;
+		iter++;
+	}
+
+	return iter->second;
 }

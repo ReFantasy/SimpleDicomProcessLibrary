@@ -33,7 +33,11 @@ private:
 class DicomSeries
 {
 public:
-
+	bool Push(std::shared_ptr<DicomFile> df);
+	bool Pop(int key);
+	void Clear();
+	int GetNumberOfDicoms()const;
+	std::shared_ptr<DicomFile> GetDicom(int n_th);
 
 private:
 	std::string _SeriesInstanceUID;
