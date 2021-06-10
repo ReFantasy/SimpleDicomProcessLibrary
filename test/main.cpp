@@ -31,17 +31,14 @@ int main()
 	
 	//std::cout << "PixelSpacing: " << dicom.GetPixelSpacing() << std::endl;
 
-	dicom.SetWindow(-500, 10);
+	/*dicom.SetWindow(-500, 10);
 
 	const unsigned char* data = nullptr;
 	data = dicom.GetOutputData(0);
-	//cout << res << endl;
 	printf("addr:%x\n", data);
 	std::cout << "WriteToPPM" << std::endl;
-	WriteToPPM("a.ppm",  dicom.GetWidth(),dicom.GetHeight(), data);
+	WriteToPPM("a.ppm",  dicom.GetWidth(),dicom.GetHeight(), data);*/
 
-	//free(data);
-
-	//WriteToPPM("test.ppm", 768, 768, (const unsigned char*)dicom.GetRawImageData());
-
+	std::cout << "ImageNumber: " << dicom.GetNumberOfImage() << std::endl;
+	std::cout << "GetSeriesInstanceUID: " << dicom.GetSeriesInstanceUID() << std::endl;
 }

@@ -71,3 +71,20 @@ const unsigned char* Dicom::GetOutputData(int frame)const
 
 	return (const unsigned char*)di->getOutputData(8, frame);
 }
+
+int Dicom::GetNumberOfImage() const
+{
+	//OFString number;
+	//df->getDataset()->findAndGetOFString(DCM_InstanceNumber, number);
+	Sint32 number = -1;
+	df->getDataset()->findAndGetSint32(DCM_InstanceNumber, number);
+	return number;
+
+}
+
+std::string Dicom::GetSeriesInstanceUID()const
+{
+	OFString id;
+	df->getDataset()->findAndGetOFString(DCM_SeriesInstanceUID, id);
+	return std::string(id.c_str());
+}

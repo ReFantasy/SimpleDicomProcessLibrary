@@ -3,7 +3,8 @@
 
 #include "dcmtk/dcmdata/dcfilefo.h"
 #include "dcmtk/dcmimgle/dcmimage.h"
-
+//#include <iostream>
+#include <string>
 
 class Dicom
 {
@@ -20,6 +21,9 @@ public:
 
 	virtual int GetNumberOfFrames()const;
 	virtual const unsigned char*  GetOutputData(int frame)const;
+
+	virtual int GetNumberOfImage()const;
+	virtual std::string GetSeriesInstanceUID()const;
 
 private:
 	std::shared_ptr<DcmFileFormat> df;
