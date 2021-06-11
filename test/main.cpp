@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <windows.h>
 #include "global.h"
 #include "core.h"
 
@@ -11,14 +12,18 @@
 #include "dcmtk/dcmdata/dcmetinf.h"
 #include "dcmtk/ofstd/ofstd.h"
 
-
+#include <thread>
+#include <vector>
 
 using namespace std;
+
+
+
 int main()
 {
 	DicomSeries series;
 	//auto b = series.ReadDir("/Users/refantasy/Desktop/CT1001051/401_351");
-	auto b = series.ReadDir("C:/Users/ReFantasy/Desktop/CT1008803/201_384");
+	auto b = series.ReadDir("C:/Users/ReFantasy/Desktop/a");
 	if (!b)
 	{
 		cout << "read fail" << endl;
@@ -32,4 +37,33 @@ int main()
 	auto data = df->GetOutputData(0);
 	WriteToPPM("test.ppm", df->GetWidth(), df->GetHeight(), data);
 
+
+	//////////////////////////////////////////////////////////////////////////
+
+	void* pdata = NULL;
+	auto imgsize = df->GetDicomImage()->createWindowsDIB(pdata, 512 * 512, 0, 8, 1, 0);
+	cout << imgsize << endl;
+
+	auto bmp = CreateBitmap(df->GetDicomImage()->getWidth(), df->GetDicomImage()->getHeight(), imgsize, pdata);
+	FILE* fp = fopen("1.bmp", "wb");
+	if (fp)
+	{
+		fwrite(bmp.data(), sizeof(char), bmp.size(), fp);
+		fclose(fp);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	std::shared_ptr<Window> pwin = std::make_shared<Window>();
+	auto f = [](std::shared_ptr<Window> pwin) {
+		pwin->wWinMain(pwin->hInstance);
+	};
+
+	std::thread t(f, pwin);
+
+	char* name = "hello";
+	while (1)
+	{
+		SendMessage(pwin->hWnd, WM_PAINT, (WPARAM)(name), (LPARAM)(name));
+	}
 }

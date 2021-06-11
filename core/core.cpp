@@ -4,8 +4,6 @@
 #include <thread>
 #include <memory>
 #include <filesystem>
-#include <mutex>
-#include <iostream>
 
 #include "dcmtk/dcmimgle/dcmimage.h"
 #include "dcmtk/dcmdata/dcfilefo.h"
@@ -190,14 +188,14 @@ bool DicomSeries::ReadDir(std::string dir)
 	if (!entry.is_directory())
 		return false;
 
-	std::filesystem::directory_iterator iters(dir);
+	
 	std::vector<std::thread> threads;
 	std::vector<std::shared_ptr<DicomFile>> dfs;
 
+	std::filesystem::directory_iterator iters(dir);
 	for (const auto& iter : iters)
 	{
-		auto load_file = [](const std::shared_ptr<DicomFile> df, const std::string& filename)
-		{
+		auto load_file = [](const std::shared_ptr<DicomFile> df, const std::string& filename){
 			df->LoadFile(filename);
 		};
 
@@ -207,8 +205,8 @@ bool DicomSeries::ReadDir(std::string dir)
 		
 	}
 
-	for (auto& thread : threads)thread.join();
-	for (const auto& df : dfs)Add(df);
+	for (auto& t : threads)t.join();
+	for (auto& df : dfs)Add(df);
 
 	return true;
 }

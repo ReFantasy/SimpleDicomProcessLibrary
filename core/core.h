@@ -29,6 +29,10 @@ public:
 	virtual std::string GetSeriesInstanceUID()const;
 	virtual bool GetMinMaxValues(double &min, double &max)const;
 
+	virtual const std::shared_ptr<DicomImage> GetDicomImage()const
+	{
+		return di;
+	}
 
 private:
 	std::shared_ptr<DcmFileFormat> df;
