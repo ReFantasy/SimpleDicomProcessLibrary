@@ -9,4 +9,8 @@ LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
 LINK_LIBRARIES(sdplglobal sdplcore)
 
 AUX_SOURCE_DIRECTORY(. ALGORITHM_LIST)
-add_executable(test ${ALGORITHM_LIST})
+add_executable(test 
+               WIN32
+               ${ALGORITHM_LIST})
+			   
+target_link_libraries(test PRIVATE Qt5::Widgets)

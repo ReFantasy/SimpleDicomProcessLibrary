@@ -8,6 +8,12 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,6 +21,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 第三方库
 IF (WIN32)
         MESSAGE(STATUS "Now is windows")
+		set(Qt5_DIR "D:/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
         # DCMTK
         include_directories("E:/dcmtk/include")
         LINK_DIRECTORIES("E:/dcmtk/lib")
@@ -31,6 +38,8 @@ ELSEIF (UNIX)
         MESSAGE(STATUS "Now is UNIX-like OS's.")
 ENDIF ()
 
+
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 ADD_SUBDIRECTORY(global)
 ADD_SUBDIRECTORY(core)
