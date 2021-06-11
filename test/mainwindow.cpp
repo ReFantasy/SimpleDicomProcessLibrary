@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     LOG(INFO)<<"launch program...";
 
     ui->setupUi(this);
+    ui->menubar->setNativeMenuBar(false);
 
     LOG(INFO)<<"create dicom series object...";
     _dicom_series = std::make_shared<DicomSeries>();
