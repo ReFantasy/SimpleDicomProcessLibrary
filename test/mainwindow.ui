@@ -28,6 +28,7 @@
      <string>文件(&amp;F)</string>
     </property>
     <addaction name="actionOpenFile_N"/>
+    <addaction name="actionOpen_DICOM_Folder"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -35,6 +36,11 @@
   <action name="actionOpenFile_N">
    <property name="text">
     <string>打开文件(&amp;N)</string>
+   </property>
+  </action>
+  <action name="actionOpen_DICOM_Folder">
+   <property name="text">
+    <string>Open DICOM folder(O)</string>
    </property>
   </action>
  </widget>

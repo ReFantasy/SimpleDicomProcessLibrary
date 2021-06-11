@@ -17,6 +17,12 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    // 菜单栏 文件 打开文件
+    void on_actionOpenFile_N_triggered();
+
+    void on_actionOpen_DICOM_Folder_triggered();
+
 private:
     Ui::MainWindow *ui;
 
