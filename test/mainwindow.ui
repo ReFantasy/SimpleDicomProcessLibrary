@@ -34,7 +34,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpenFile_N">
    <property name="text">
-    <string>OpenFile(&amp;N)</string>
+    <string>打开文件(&amp;N)</string>
    </property>
   </action>
  </widget>
