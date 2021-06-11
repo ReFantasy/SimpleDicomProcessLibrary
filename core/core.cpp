@@ -2,6 +2,10 @@
 #include "global.h"
 #include <vector>
 #include <thread>
+#include <memory>
+#include <filesystem>
+#include <mutex>
+#include <iostream>
 
 #include "dcmtk/dcmimgle/dcmimage.h"
 #include "dcmtk/dcmdata/dcfilefo.h"
@@ -9,6 +13,9 @@
 #include "dcmtk/dcmdata/dcuid.h"
 #include "dcmtk/dcmdata/dcmetinf.h"
 #include "dcmtk/ofstd/ofstd.h"
+
+
+using namespace std;
 
 DicomFile::DicomFile(const std::string& filename)
 {
@@ -187,20 +194,21 @@ bool DicomSeries::ReadDir(std::string dir)
 	std::vector<std::thread> threads;
 	std::vector<std::shared_ptr<DicomFile>> dfs;
 
-	for (const auto& iter:iters)
+	for (const auto& iter : iters)
 	{
-		auto load_file = [](const std::shared_ptr<DicomFile>& df, const std::string& filename)
+		auto load_file = [](const std::shared_ptr<DicomFile> df, const std::string& filename)
 		{
 			df->LoadFile(filename);
 		};
 
 		auto df = std::make_shared<DicomFile>();
 		dfs.push_back(df);
-		threads.emplace_back(load_file, df, iter.path());
+		threads.emplace_back(load_file, df, iter.path().string());
+		
 	}
 
 	for (auto& thread : threads)thread.join();
-	for (const auto& df:dfs)Add(df);
+	for (const auto& df : dfs)Add(df);
 
 	return true;
 }
