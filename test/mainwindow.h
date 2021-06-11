@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "global.h"
+#include "core.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +19,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+private:
+    // dicom series
+    std::shared_ptr<DicomSeries> _dicom_series;
 };
 
 #endif // MAINWINDOW_H

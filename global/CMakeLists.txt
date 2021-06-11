@@ -1,2 +1,2 @@
 AUX_SOURCE_DIRECTORY(. ALGORITHM_LIST)
-ADD_LIBRARY(sdplglobal STATIC ${ALGORITHM_LIST} global.h) 
+ADD_LIBRARY(sdplglobal STATIC ${ALGORITHM_LIST} global.h easylogging++.h) 
