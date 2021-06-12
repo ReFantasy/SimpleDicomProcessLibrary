@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     LOG(INFO)<<"create dicom series object...";
     _dicom_series = std::make_shared<DicomSeries>();
 
+    ui->graphicsView->setMouseTracking(true);
     //auto res = _dicom_series->ReadDir("/Users/refantasy/Desktop/CT1001051/401_351");
 
 }
@@ -63,6 +64,14 @@ void MainWindow::on_actionOpen_DICOM_Folder_triggered()
         _dicom_series = tmp_series;
 
         LOG(INFO)<<"open folder success!";
+
+
+		int w = _dicom_series->GetDicom(0)->GetWidth();
+		int h = _dicom_series->GetDicom(0)->GetHeight();
+		auto pixelData = _dicom_series->GetDicom(0)->GetOutputData(0);
+		QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
+		auto pixmap = QPixmap::fromImage(image);
+        ui->graphicsView->SetPixmap(pixmap);
     }
     else
     {

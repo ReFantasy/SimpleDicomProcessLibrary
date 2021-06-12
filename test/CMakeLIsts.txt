@@ -13,6 +13,8 @@ add_executable(test
                WIN32
 			   mainwindow.h
 			   mainwindow.ui
+			   dicomimagegraphicsview.h
+			   dicomimagegraphicsitem.h
                ${ALGORITHM_LIST})
 			   
 target_link_libraries(test PRIVATE Qt5::Widgets)
