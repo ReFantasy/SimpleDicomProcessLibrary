@@ -29,7 +29,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionOpenFile_N_triggered()
 {
 
-    QString file_name  = QFileDialog::getOpenFileName(this, tr("文件对话框"));
+    QString file_name  = QFileDialog::getOpenFileName(this);
     LOG(INFO)<<QString("try to open file %1").arg(file_name).toLocal8Bit().data();
 
     std::shared_ptr<DicomFile> df = std::make_shared<DicomFile>();
@@ -52,7 +52,7 @@ void MainWindow::on_actionOpenFile_N_triggered()
 
 void MainWindow::on_actionOpen_DICOM_Folder_triggered()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("文件对话框"));
+    QString dir = QFileDialog::getExistingDirectory(this);
     LOG(INFO)<<QString("try to open folder %1").arg(dir).toLocal8Bit().data();
 
     auto tmp_series = std::make_shared<DicomSeries>();

@@ -40,7 +40,7 @@
   </action>
   <action name="actionOpen_DICOM_Folder">
    <property name="text">
-    <string>Open DICOM folder(O)</string>
+    <string>打开文件夹(&amp;O)</string>
    </property>
   </action>
  </widget>
