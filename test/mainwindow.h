@@ -19,6 +19,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event)override;
+
 
 private slots:
     // 菜单栏 文件 打开文件
