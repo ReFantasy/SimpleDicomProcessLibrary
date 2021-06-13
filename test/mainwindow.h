@@ -20,7 +20,7 @@ public:
     ~MainWindow();
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event)override;
     void dropEvent(QDropEvent *event)override;
 
 
