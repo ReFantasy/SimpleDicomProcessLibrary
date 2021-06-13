@@ -11,6 +11,7 @@ DicomImageGraphicsView::DicomImageGraphicsView(QWidget *parent)
     :QGraphicsView(parent)
 {
     this->setCursor(Qt::CrossCursor);
+    //this->setBackgroundBrush(QColor(0x11,0x2f,0x41));
 
     //setAlignment(Qt::AlignLeft | Qt::AlignTop);
     _image_item = new DicomImageGraphicsItem;
