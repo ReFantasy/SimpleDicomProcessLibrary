@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSlider>
 #include "global.h"
 #include "core.h"
 
@@ -23,12 +24,21 @@ private slots:
 
     void on_actionOpen_DICOM_Folder_triggered();
 
+    void ShowNewSeriesFrame(int frame);
+    void ShowNewDicomFrame(int frame);
+
+    void DicomWindowChanged(QPointF windelta);
+
 private:
     Ui::MainWindow *ui;
 
 private:
     // dicom series
     std::shared_ptr<DicomSeries> _dicom_series;
+
+private:
+    QSlider* hslider_series_frame;
+    QSlider* hslider_dicom_frame;
 };
 
 #endif // MAINWINDOW_H

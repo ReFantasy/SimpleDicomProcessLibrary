@@ -6,9 +6,12 @@
 class DicomImageGraphicsItem : public QGraphicsPixmapItem
 {
 public:
+    //DicomImageGraphicsItem(QGraphicsItem* parent = nullptr);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event)override;
+
+
 };
 
 #endif // DICOMIMAGEGRAPHICSITEM_H

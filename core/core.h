@@ -37,7 +37,7 @@ public:
 private:
     void Decoder(std::shared_ptr<DcmFileFormat> df);
 
-public:
+private:
 	std::shared_ptr<DcmFileFormat> df;
 	std::shared_ptr<DicomImage> di;
 };

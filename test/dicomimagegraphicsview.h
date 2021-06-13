@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <QLabel>
+#include <QMouseEvent>
 
 
 class DicomImageGraphicsItem;
@@ -21,8 +22,13 @@ public:
 
     void SetPixmap(QPixmap pixmap);
 
+signals:
+    void DicomWindowDelta(QPointF);
+
 protected:
     void mousePressEvent(QMouseEvent* event) override;
+
+    void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent *event) override;
   
 private:

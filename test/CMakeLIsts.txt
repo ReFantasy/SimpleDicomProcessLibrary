@@ -10,7 +10,7 @@ LINK_LIBRARIES(sdplglobal sdplcore)
 
 AUX_SOURCE_DIRECTORY(. ALGORITHM_LIST)
 add_executable(test 
-               WIN32
+               #WIN32
 			   mainwindow.h
 			   mainwindow.ui
 			   dicomimagegraphicsview.h
