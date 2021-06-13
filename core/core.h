@@ -31,7 +31,7 @@ public:
 
 	virtual const std::shared_ptr<DicomImage> GetDicomImage()const
 	{
-		return di;
+        return di;
 	}
 
 private:

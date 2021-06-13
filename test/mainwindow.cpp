@@ -182,6 +182,7 @@ void MainWindow::DicomWindowChanged(QPointF windelta)
     _dicom_series->GetWindow(c, w);
     c += windelta.x();
     w += windelta.y();
+    if(w<2)w=2;
     
     _dicom_series->SetWindow(c, w);
     ShowNewSeriesFrame(hslider_series_frame->value());

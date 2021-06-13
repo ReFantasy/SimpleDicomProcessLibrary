@@ -45,7 +45,7 @@ bool DicomFile::LoadFile(const std::string &filename)
         df = tmp_df;
         di = std::make_shared<DicomImage>(tmp_df->getDataset(), tmp_df->getDataset()->getCurrentXfer());
 		
-		di->setMinMaxWindow();
+        di->setMinMaxWindow();
 		
 		return true;
 	}
