@@ -72,7 +72,7 @@ void MainWindow::on_actionOpenFile_N_triggered()
         _dicom_series = std::make_shared<DicomSeries>();
 
         LOG(INFO)<<"open file success!";
-        ui->graphicsView->resetMatrix();
+        ui->graphicsView->resetTransform();
         _dicom_series->Add(df);
 
 		// set slider
@@ -81,7 +81,6 @@ void MainWindow::on_actionOpenFile_N_triggered()
 
         hslider_series_frame->setRange(0, 0);
 		hslider_series_frame->setValue(0);
-		hslider_series_frame->valueChanged(0);
         hslider_series_frame->setEnabled(false);
 
 		hslider_dicom_frame->setRange(0, df->GetNumberOfFrames()-1);
@@ -113,7 +112,7 @@ void MainWindow::on_actionOpen_DICOM_Folder_triggered()
         _dicom_series = tmp_series;
 
         LOG(INFO)<<"open folder success!";
-        ui->graphicsView->resetMatrix();
+        ui->graphicsView->resetTransform();
 
 
         // set slider
@@ -122,7 +121,6 @@ void MainWindow::on_actionOpen_DICOM_Folder_triggered()
 
         hslider_series_frame->setRange(0, _dicom_series->GetTotalFrames()-1);
         hslider_series_frame->setValue(0);
-        hslider_series_frame->valueChanged(0);
         if (_dicom_series->GetTotalFrames() - 1 < 1)
             hslider_series_frame->setEnabled(false);
 
@@ -149,28 +147,12 @@ void MainWindow::on_actionOpen_DICOM_Folder_triggered()
 
 void MainWindow::ShowNewSeriesFrame(int frame)
 {
-	if (_dicom_series->GetTotalFrames() < 1)
-		return;
-
-    auto di = _dicom_series->GetDicom(frame);
-	int w = di->GetWidth();
-	int h = di->GetHeight();
-	auto pixelData = di->GetOutputData(hslider_dicom_frame->value());
-	QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
-	ui->graphicsView->SetPixmap(QPixmap::fromImage(image));
+    ShowNewFrame(frame, hslider_dicom_frame->value());
 }
 
 void MainWindow::ShowNewDicomFrame(int frame)
 {
-    if (_dicom_series->GetTotalFrames() < 1)
-        return;
-
-	auto di = _dicom_series->GetDicom(hslider_series_frame->value());
-	int w = di->GetWidth();
-	int h = di->GetHeight();
-	auto pixelData = di->GetOutputData(frame);
-	QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
-	ui->graphicsView->SetPixmap(QPixmap::fromImage(image));
+    ShowNewFrame(hslider_series_frame->value(),frame);
 }
 
 void MainWindow::DicomWindowChanged(QPointF windelta)
@@ -182,10 +164,10 @@ void MainWindow::DicomWindowChanged(QPointF windelta)
     _dicom_series->GetWindow(c, w);
     c += windelta.x();
     w += windelta.y();
-    if(w<2)w=2;
+    w = (w<2?2:w);
     
     _dicom_series->SetWindow(c, w);
-    ShowNewSeriesFrame(hslider_series_frame->value());
+    ShowNewFrame(hslider_series_frame->value(), hslider_dicom_frame->value());
 
 	auto win_label = this->statusBar()->findChild<QLabel*>("window_label");
 	win_label->setText(QString("\x20\x20WC:%1 WW:%2").arg(c).arg(w));
@@ -196,15 +178,17 @@ void MainWindow::on_actionSave_triggered()
 {
 	QString file_name = QFileDialog::getSaveFileName(this, "Save as picture", "", tr("*bmp;*jpg"));
 	LOG(INFO) << QString("try to open file %1").arg(file_name).toLocal8Bit().data();
+}
 
-	//if (_dicom_series->GetTotalFrames() < 1)
-	//	return;
+void MainWindow::ShowNewFrame(int series_frame, int dicom_frame)
+{
+    if (_dicom_series->GetTotalFrames() < 1)
+        return;
 
- //   // TODO Save aicom as picture
-	//auto di = _dicom_series->GetDicom(hslider_series_frame->value());
-	//int w = di->GetWidth();
-	//int h = di->GetHeight();
-	//auto pixelData = di->GetOutputData(hslider_dicom_frame->value());
-	//QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
-	//QPixmap picture = QPixmap::fromImage(image);
+    auto di = _dicom_series->GetDicom(series_frame);
+    int w = di->GetWidth();
+    int h = di->GetHeight();
+    auto pixelData = di->GetOutputData(dicom_frame);
+    QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
+    ui->graphicsView->SetPixmap(QPixmap::fromImage(image));
 }

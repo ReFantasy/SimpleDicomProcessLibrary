@@ -19,18 +19,17 @@ using namespace std;
 
 DicomFile::DicomFile(const std::string& filename)
 {
-	/*OFCondition status = df->loadFile(filename.c_str());
-	if (!status.good())
-	{
-		df = std::make_shared<DcmFileFormat>();
-	}
-	else
-	{
+    OFCondition status = df->loadFile(filename.c_str());
+    if (!status.good())
+    {
+        df = std::make_shared<DcmFileFormat>();
+    }
+    else
+    {
         Decoder(df);
         di = std::make_shared<DicomImage>(df->getDataset(), df->getDataset()->getCurrentXfer());
-	}*/
-
-	LoadFile(filename);
+        di->setMinMaxWindow();
+    }
 }
 
 bool DicomFile::LoadFile(const std::string &filename)
@@ -233,7 +232,7 @@ bool DicomSeries::GetWindow(double& win_center, double& win_width) const
 bool DicomSeries::SetWindow(double win_center, double win_width)
 {
 	bool res = true;
-	for(auto it :_series_map)
+    for(const auto &it :_series_map)
 	{
 		res = it.second->SetWindow(win_center,win_width);
 		if(res == false)

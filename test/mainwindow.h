@@ -33,6 +33,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+private:
+    void ShowNewFrame(int series_frame, int dicom_frame);
 
 private:
     // dicom series
