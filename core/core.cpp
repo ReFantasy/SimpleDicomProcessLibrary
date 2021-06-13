@@ -32,9 +32,6 @@ DicomFile::DicomFile(const std::string& filename)
 bool DicomFile::LoadFile(const std::string &filename)
 {
 	auto tmp_df = std::make_shared<DcmFileFormat>();
-    OFString ef;
-    tmp_df->getDataset()->findAndGetOFString({0x0002,0x0010}, ef);
-    LOG(INFO)<<ef.c_str();
 
 	OFCondition status = tmp_df->loadFile(filename.c_str());
 	if (status.good())
