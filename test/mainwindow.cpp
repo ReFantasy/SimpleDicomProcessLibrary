@@ -42,6 +42,7 @@ void MainWindow::on_actionOpenFile_N_triggered()
 
         LOG(INFO)<<"open file success!";
         _dicom_series->Add(df);
+        //_dicom_series->SetWindow(235,596);
 
         int w = _dicom_series->GetDicom(0)->GetWidth();
         int h = _dicom_series->GetDicom(0)->GetHeight();

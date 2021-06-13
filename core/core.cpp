@@ -11,6 +11,7 @@
 #include "dcmtk/dcmdata/dcuid.h"
 #include "dcmtk/dcmdata/dcmetinf.h"
 #include "dcmtk/ofstd/ofstd.h"
+#include "dcmtk/dcmjpeg/djdecode.h"
 #include "easylogging++.h"
 
 
@@ -25,6 +26,7 @@ DicomFile::DicomFile(const std::string& filename)
 	}
 	else
 	{
+        Decoder(df);
         di = std::make_shared<DicomImage>(df->getDataset(), df->getDataset()->getCurrentXfer());
 	}
 }
@@ -34,9 +36,11 @@ bool DicomFile::LoadFile(const std::string &filename)
 	auto tmp_df = std::make_shared<DcmFileFormat>();
 
 	OFCondition status = tmp_df->loadFile(filename.c_str());
+
 	if (status.good())
-	{
-		df = tmp_df;
+    {
+        Decoder(tmp_df);
+        df = tmp_df;
         di = std::make_shared<DicomImage>(tmp_df->getDataset(), tmp_df->getDataset()->getCurrentXfer());
 		return true;
 	}
@@ -237,5 +241,12 @@ bool DicomFile::GetMinMaxValues(double& min, double& max) const
 {
 	if (df == nullptr)
 		return false;
-	return di->getMinMaxValues(min, max);
+    return di->getMinMaxValues(min, max);
+}
+
+void DicomFile::Decoder(std::shared_ptr<DcmFileFormat> df)
+{
+    DJDecoderRegistration::registerCodecs();
+    df->getDataset()->chooseRepresentation(EXS_LittleEndianExplicit,NULL);
+    //DJDecoderRegistration::cleanup();
 }
