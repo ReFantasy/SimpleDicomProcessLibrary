@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -28,6 +28,8 @@ private slots:
     void ShowNewDicomFrame(int frame);
 
     void DicomWindowChanged(QPointF windelta);
+
+    void on_actionSave_triggered();
 
 private:
     Ui::MainWindow *ui;

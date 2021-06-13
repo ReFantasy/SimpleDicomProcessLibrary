@@ -190,3 +190,20 @@ void MainWindow::DicomWindowChanged(QPointF windelta)
 	win_label->setText(QString("\x20\x20WC:%1 WW:%2").arg(c).arg(w));
 }
 
+
+void MainWindow::on_actionSave_triggered()
+{
+	QString file_name = QFileDialog::getSaveFileName(this, "Save as picture", "", tr("*bmp;*jpg"));
+	LOG(INFO) << QString("try to open file %1").arg(file_name).toLocal8Bit().data();
+
+	//if (_dicom_series->GetTotalFrames() < 1)
+	//	return;
+
+ //   // TODO Save aicom as picture
+	//auto di = _dicom_series->GetDicom(hslider_series_frame->value());
+	//int w = di->GetWidth();
+	//int h = di->GetHeight();
+	//auto pixelData = di->GetOutputData(hslider_dicom_frame->value());
+	//QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
+	//QPixmap picture = QPixmap::fromImage(image);
+}
