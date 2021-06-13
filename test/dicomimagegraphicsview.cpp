@@ -13,7 +13,6 @@ DicomImageGraphicsView::DicomImageGraphicsView(QWidget *parent)
     _scene->addItem(_image_item);
 
 
-
     this->setScene(_scene);
     this->setMouseTracking(true);
     _scene->setFocusItem(_image_item);
