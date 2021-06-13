@@ -42,6 +42,13 @@ void MainWindow::on_actionOpenFile_N_triggered()
 
         LOG(INFO)<<"open file success!";
         _dicom_series->Add(df);
+
+        int w = _dicom_series->GetDicom(0)->GetWidth();
+        int h = _dicom_series->GetDicom(0)->GetHeight();
+        auto pixelData = _dicom_series->GetDicom(0)->GetOutputData(0);
+        QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
+        auto pixmap = QPixmap::fromImage(image);
+        ui->graphicsView->SetPixmap(pixmap);
     }
     else
     {

@@ -23,6 +23,7 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
+    void wheelEvent(QWheelEvent *event) override;
   
 private:
     QGraphicsScene * _scene = nullptr;

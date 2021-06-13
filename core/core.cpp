@@ -11,6 +11,7 @@
 #include "dcmtk/dcmdata/dcuid.h"
 #include "dcmtk/dcmdata/dcmetinf.h"
 #include "dcmtk/ofstd/ofstd.h"
+#include "easylogging++.h"
 
 
 using namespace std;
@@ -24,19 +25,22 @@ DicomFile::DicomFile(const std::string& filename)
 	}
 	else
 	{
-		di = std::make_shared<DicomImage>(df->getDataset(), df->getDataset()->getCurrentXfer());
+        di = std::make_shared<DicomImage>(df->getDataset(), df->getDataset()->getCurrentXfer());
 	}
 }
 
 bool DicomFile::LoadFile(const std::string &filename)
 {
 	auto tmp_df = std::make_shared<DcmFileFormat>();
+    OFString ef;
+    tmp_df->getDataset()->findAndGetOFString({0x0002,0x0010}, ef);
+    LOG(INFO)<<ef.c_str();
 
 	OFCondition status = tmp_df->loadFile(filename.c_str());
 	if (status.good())
 	{
 		df = tmp_df;
-		di = std::make_shared<DicomImage>(tmp_df->getDataset(), tmp_df->getDataset()->getCurrentXfer());
+        di = std::make_shared<DicomImage>(tmp_df->getDataset(), tmp_df->getDataset()->getCurrentXfer());
 		return true;
 	}
 	return false;
@@ -85,6 +89,7 @@ const unsigned char* DicomFile::GetOutputData(int frame) const
 	int frames = GetNumberOfFrames();
 	if (frame >= frames)
 		return nullptr;
+
 
 	return (const unsigned char*)di->getOutputData(8, frame);
 }
