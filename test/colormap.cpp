@@ -1,5 +1,27 @@
 #include "colormap.h"
 
+QVector<QRgb> Origin()
+{
+    QVector<QRgb> colormap;
+    for(int i = 0;i<256;i++)
+    {
+        QRgb v = qRgb(i,i,i);
+        colormap.push_back(v);
+    }
+    return colormap;
+}
+
+QVector<QRgb> Reverse()
+{
+    QVector<QRgb> colormap;
+    for(int i = 0;i<256;i++)
+    {
+        QRgb v = qRgb(255-i,255-i,255-i);
+        colormap.push_back(v);
+    }
+    return colormap;
+}
+
 QVector<QRgb> Autumn()
 {
     unsigned char colortable_r[256] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
@@ -214,35 +236,60 @@ QVector<QRgb> ColorMapFactory(COLORMAP colormap_type)
 {
     switch (colormap_type)
     {
+    case COLORMAP_ORIGIN:
+        return Origin();
+        break;
+    case COLORMAP_REVERSE:
+        return Reverse();
+        break;
     case COLORMAP_AUTUMN:
+        return Autumn();
         break;
     case COLORMAP_BONE:
+        return Bone();
         break;
     case COLORMAP_COOL:
+        return Cool();
         break;
     case COLORMAP_HOT:
+        return Hot();
         break;
     case COLORMAP_HSV:
+        return Hsv();
         break;
     case COLORMAP_JET:
+        return Jet();
         break;
     case COLORMAP_OCEAN:
+        return Ocean();
         break;
     case COLORMAP_PARULA:
+        return Parula();
         break;
     case COLORMAP_PINK:
+        return Pink();
         break;
     case COLORMAP_RAINBOW:
+        return Rainbow();
         break;
     case COLORMAP_SPRING:
+        return Spring();
         break;
     case COLORMAP_SUMMER:
+        return Summer();
         break;
     case COLORMAP_TURBO:
+        return Turbo();
         break;
     case COLORMAP_WINTER:
+        return Winter();
         break;
     default:
+        return Origin();
         break;
     }
 }
+
+
+
+

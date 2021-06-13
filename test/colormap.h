@@ -4,6 +4,8 @@
 #include <QRgb>
 enum  COLORMAP
 {
+    COLORMAP_ORIGIN,
+    COLORMAP_REVERSE,
     COLORMAP_AUTUMN,
     COLORMAP_BONE,
     COLORMAP_COOL,
@@ -19,7 +21,8 @@ enum  COLORMAP
     COLORMAP_TURBO,
     COLORMAP_WINTER
 };
-
+QVector<QRgb> Origin();
+QVector<QRgb> Reverse();
 QVector<QRgb> Autumn();
 QVector<QRgb> Bone();
 QVector<QRgb> Cool();
@@ -34,5 +37,7 @@ QVector<QRgb> Spring();
 QVector<QRgb> Summer();
 QVector<QRgb> Turbo();
 QVector<QRgb> Winter();
+
+QVector<QRgb> ColorMapFactory(COLORMAP colormap_type);
 
 #endif//__COLORMAP_H__

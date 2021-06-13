@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSlider>
+#include <QComboBox>
 #include "global.h"
 #include "core.h"
 
@@ -18,6 +19,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
     // 菜单栏 文件 打开文件
     void on_actionOpenFile_N_triggered();
@@ -31,6 +33,9 @@ private slots:
 
     void on_actionSave_triggered();
 
+    void ChangeColorMap(int);
+
+
 private:
     Ui::MainWindow *ui;
 private:
@@ -43,6 +48,7 @@ private:
 private:
     QSlider* hslider_series_frame;
     QSlider* hslider_dicom_frame;
+    QComboBox *colormap;
 };
 
 #endif // MAINWINDOW_H
