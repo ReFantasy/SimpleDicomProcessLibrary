@@ -212,5 +212,37 @@ QVector<QRgb> Winter()
 
 QVector<QRgb> ColorMapFactory(COLORMAP colormap_type)
 {
-
+    switch (colormap_type)
+    {
+    case COLORMAP_AUTUMN:
+        break;
+    case COLORMAP_BONE:
+        break;
+    case COLORMAP_COOL:
+        break;
+    case COLORMAP_HOT:
+        break;
+    case COLORMAP_HSV:
+        break;
+    case COLORMAP_JET:
+        break;
+    case COLORMAP_OCEAN:
+        break;
+    case COLORMAP_PARULA:
+        break;
+    case COLORMAP_PINK:
+        break;
+    case COLORMAP_RAINBOW:
+        break;
+    case COLORMAP_SPRING:
+        break;
+    case COLORMAP_SUMMER:
+        break;
+    case COLORMAP_TURBO:
+        break;
+    case COLORMAP_WINTER:
+        break;
+    default:
+        break;
+    }
 }
