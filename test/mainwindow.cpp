@@ -84,28 +84,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::dragEnterEvent(QDragEnterEvent *event)
-{
-    if(event->mimeData()->hasUrls())
-    {
-        event->acceptProposedAction();
-        //qDebug()<<event->mimeData()->urls();
-    }
-    else
-    {
-        event->ignore();
-    }
-}
-
-void MainWindow::dropEvent(QDropEvent *event)
-{
-    const QMimeData *mimedata = event->mimeData();
-    if(mimedata->hasUrls())
-    {
-        qDebug()<<"ok";
-    }
-}
-
 void MainWindow::on_actionOpenFile_N_triggered()
 {
 
