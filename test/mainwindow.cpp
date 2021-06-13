@@ -1,12 +1,14 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "easylogging++.h"
+#include "colormap.h"
 #include <QFileDialog>
 #include <QString>
 #include <QPixmap>
 #include <QToolBar>
 #include <QSlider>
 #include <QSpacerItem>
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -178,6 +180,8 @@ void MainWindow::on_actionSave_triggered()
 {
 	QString file_name = QFileDialog::getSaveFileName(this, "Save as picture", "", tr("*bmp;*jpg"));
 	LOG(INFO) << QString("try to open file %1").arg(file_name).toLocal8Bit().data();
+
+
 }
 
 void MainWindow::ShowNewFrame(int series_frame, int dicom_frame)
@@ -190,5 +194,6 @@ void MainWindow::ShowNewFrame(int series_frame, int dicom_frame)
     int h = di->GetHeight();
     auto pixelData = di->GetOutputData(dicom_frame);
     QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
+    //image.setColorTable(Rainbow());
     ui->graphicsView->SetPixmap(QPixmap::fromImage(image));
 }
