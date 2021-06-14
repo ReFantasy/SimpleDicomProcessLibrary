@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // status windows label
     auto win_label = new QLabel(this);
     win_label->setObjectName("window_label");
+    win_label->setText("Ready");
     this->statusBar()->addWidget(win_label);
     
     // add tool bar
@@ -50,24 +51,24 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(hslider_dicom_frame, &QSlider::valueChanged, this, &MainWindow::ShowNewDicomFrame);
 
     // add pseudo colormap
-    colormap = new QComboBox(this);
-    colormap->addItem("ORIGIN",COLORMAP::COLORMAP_ORIGIN);
-    colormap->addItem("RESERVE",COLORMAP::COLORMAP_REVERSE);
-    colormap->addItem("RAINBOW",COLORMAP::COLORMAP_RAINBOW);
-    colormap->addItem("HOT",COLORMAP::COLORMAP_HOT);
-    colormap->addItem("TURBO",COLORMAP::COLORMAP_TURBO);
-    colormap->addItem("AUTUMN",COLORMAP::COLORMAP_AUTUMN);
-    colormap->addItem("BONE",COLORMAP::COLORMAP_BONE);
-    colormap->addItem("COOL",COLORMAP::COLORMAP_COOL);
-    colormap->addItem("HSV",COLORMAP::COLORMAP_HSV);
-    colormap->addItem("JET",COLORMAP::COLORMAP_JET);
-    colormap->addItem("OCEAN",COLORMAP::COLORMAP_OCEAN);
-    colormap->addItem("PARULA",COLORMAP::COLORMAP_PARULA);
-    colormap->addItem("PINK",COLORMAP::COLORMAP_PINK);
-    colormap->addItem("SPRING",COLORMAP::COLORMAP_SPRING);
-    colormap->addItem("SUMMER",COLORMAP::COLORMAP_SUMMER);
-    colormap->addItem("WINTER",COLORMAP::COLORMAP_WINTER);
-    connect(colormap, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeColorMap(int)));
+    combox_colormap = new QComboBox(this);
+    combox_colormap->addItem("ORIGIN",COLORMAP::COLORMAP_ORIGIN);
+    combox_colormap->addItem("RESERVE",COLORMAP::COLORMAP_REVERSE);
+    combox_colormap->addItem("RAINBOW",COLORMAP::COLORMAP_RAINBOW);
+    combox_colormap->addItem("HOT",COLORMAP::COLORMAP_HOT);
+    combox_colormap->addItem("TURBO",COLORMAP::COLORMAP_TURBO);
+    combox_colormap->addItem("AUTUMN",COLORMAP::COLORMAP_AUTUMN);
+    combox_colormap->addItem("BONE",COLORMAP::COLORMAP_BONE);
+    combox_colormap->addItem("COOL",COLORMAP::COLORMAP_COOL);
+    combox_colormap->addItem("HSV",COLORMAP::COLORMAP_HSV);
+    combox_colormap->addItem("JET",COLORMAP::COLORMAP_JET);
+    combox_colormap->addItem("OCEAN",COLORMAP::COLORMAP_OCEAN);
+    combox_colormap->addItem("PARULA",COLORMAP::COLORMAP_PARULA);
+    combox_colormap->addItem("PINK",COLORMAP::COLORMAP_PINK);
+    combox_colormap->addItem("SPRING",COLORMAP::COLORMAP_SPRING);
+    combox_colormap->addItem("SUMMER",COLORMAP::COLORMAP_SUMMER);
+    combox_colormap->addItem("WINTER",COLORMAP::COLORMAP_WINTER);
+    connect(combox_colormap, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeColorMap(int)));
 
 
 
@@ -75,8 +76,15 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addWidget(hslider_series_frame);
     toolBar->addWidget(new QLabel("Frames:"));
     toolBar->addWidget(hslider_dicom_frame);
-    toolBar->addWidget(colormap);
+    toolBar->addWidget(combox_colormap);
     
+
+    // set Style Sheet
+    this->centralWidget()->setStyleSheet("background-color: rgb(0, 0, 0)");
+    this->statusBar()->setStyleSheet("background-color: rgb(50, 50, 50); border: 0px");
+    win_label->setFrameShape(QFrame::NoFrame);
+    win_label->setStyleSheet("background-color: rgb(100, 100, 100)"); 
+    win_label->setStyleSheet("font: 8pt \"Agency FB\" ; color:white");
 }
 
 MainWindow::~MainWindow()
@@ -196,7 +204,7 @@ void MainWindow::DicomWindowChanged(QPointF windelta)
     ShowNewFrame(hslider_series_frame->value(), hslider_dicom_frame->value());
 
     auto win_label = this->statusBar()->findChild<QLabel*>("window_label");
-    win_label->setText(QString("\x20\x20WC:%1 WW:%2").arg(c).arg(w));
+    win_label->setText(QString("\x20\x20WC:%1 \x20\x20 WW:%2\x20\x20").arg(c).arg(w));
 }
 
 
@@ -218,7 +226,7 @@ void MainWindow::ChangeColorMap(int a)
     int h = di->GetHeight();
     auto pixelData = di->GetOutputData(hslider_dicom_frame->value());
     QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
-    image.setColorTable(ColorMapFactory((COLORMAP)colormap->currentData().toUInt()));
+    image.setColorTable(ColorMapFactory((COLORMAP)combox_colormap->currentData().toUInt()));
 
     ui->graphicsView->SetPixmap(QPixmap::fromImage(image));
 }
@@ -233,7 +241,7 @@ void MainWindow::ShowNewFrame(int series_frame, int dicom_frame)
     int h = di->GetHeight();
     auto pixelData = di->GetOutputData(dicom_frame);
     QImage image(pixelData, w, h, w, QImage::Format_Indexed8);
-    image.setColorTable(ColorMapFactory((COLORMAP)colormap->currentData().toUInt()));
+    image.setColorTable(ColorMapFactory((COLORMAP)combox_colormap->currentData().toUInt()));
 
     ui->graphicsView->SetPixmap(QPixmap::fromImage(image));
 }

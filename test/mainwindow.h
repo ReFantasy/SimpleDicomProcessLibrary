@@ -48,7 +48,7 @@ private:
 private:
     QSlider* hslider_series_frame;
     QSlider* hslider_dicom_frame;
-    QComboBox *colormap;
+    QComboBox *combox_colormap;
 };
 
 #endif // MAINWINDOW_H
