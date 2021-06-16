@@ -99,7 +99,7 @@ void MainWindow::on_actionOpenFile_N_triggered()
     LOG(INFO)<<QString("try to open file %1").arg(file_name).toLocal8Bit().data();
 
     std::shared_ptr<DicomFile> df = std::make_shared<DicomFile>();
-    auto res = df->LoadFile(file_name.toStdString());
+    auto res = df->LoadFile(std::string(file_name.toLocal8Bit()));
     if(res)
     {
         // delete existed dicom
