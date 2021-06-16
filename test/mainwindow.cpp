@@ -139,7 +139,7 @@ void MainWindow::on_actionOpen_DICOM_Folder_triggered()
     LOG(INFO)<<QString("try to open folder %1").arg(dir).toLocal8Bit().data();
 
     auto tmp_series = std::make_shared<DicomSeries>();
-    auto res  = tmp_series->ReadDir(dir.toStdString());
+    auto res  = tmp_series->ReadDir(std::string(dir.toLocal8Bit()));
     if(res)
     {
         // delete existed dicom
